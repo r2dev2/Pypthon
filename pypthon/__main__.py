@@ -1,11 +1,17 @@
 import parser
 import sys
 
+from environment import *
+
 
 def main():
-    print("Welcome to pypthon")
-    print(dir(parser))
+    python = parser.parse_command(" ".join(sys.argv[1:]))
+    print(python)
+    eval(python)
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        pass

@@ -19,6 +19,11 @@ operator_chars = {
     "<<",
     ">>",
 }
+spaced_operator_chars = {
+    "and",
+    "or",
+    "in",
+}
 
 
 def parse_command(command: str) -> str:
@@ -28,7 +33,7 @@ def parse_command(command: str) -> str:
     segments = get_piped_segments(command)
     value = segments[0]
 
-    if __is_literal(value):
+    if 1 or __is_literal(value):
         segments = segments[1:]
     else:
         value = "stdin"
@@ -43,10 +48,13 @@ def get_piped_segments(command: str) -> List[str]:
     """
     Gets the python code of each command in between pipes.
     """
-    return [pypthon_cmd_to_python(term) for term in __term_enumerator(command, "|")]
+    return [
+        pypthon_cmd_to_python(term, i == 0)
+        for i, term in enumerate(__term_enumerator(command, "|"))
+    ]
 
 
-def pypthon_cmd_to_python(command: str) -> str:
+def pypthon_cmd_to_python(command: str, is_first: bool) -> str:
     command = command.strip()
 
     if __is_literal(command):
@@ -54,6 +62,8 @@ def pypthon_cmd_to_python(command: str) -> str:
 
     name, args = __get_function_name_and_args(command)
 
+    if is_first:
+        return name
     return f"{name}({', '.join(args)})"
 
 
@@ -79,6 +89,7 @@ def __spaces_separated_to_args(space_arg: str) -> List[str]:
 def __term_enumerator(terms: str, separator: str) -> Generator[str, None, None]:
     last_idx = 0
     is_creating_literal = []
+    ignore = {"not"}
 
     for i, c in enumerate(terms + separator):
         if is_creating_literal and c == literal_chars.get(is_creating_literal[-1]):
@@ -87,7 +98,7 @@ def __term_enumerator(terms: str, separator: str) -> Generator[str, None, None]:
             is_creating_literal.append(c)
         elif c == separator and not is_creating_literal:
             term = terms[last_idx:i].strip()
-            if term:
+            if term and term not in ignore:
                 yield term
                 last_idx = i + 1
 
@@ -99,7 +110,7 @@ def __combine_args_with_operators(args: List[str]) -> List[str]:
     while args:
         arg = args.pop()
         is_colon = arg[-1:] == ":"
-        if arg[-1:] in operator_chars or arg[-2:] in operator_chars or is_colon:
+        if arg in spaced_operator_chars or arg[-1:] in operator_chars or arg[-2:] in operator_chars or is_colon:
             prev = args_after_operators[-1]
             if is_colon:
                 args_after_operators[-1] = f"lambda {arg} {prev}"

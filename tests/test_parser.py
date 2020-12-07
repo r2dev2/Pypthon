@@ -9,8 +9,8 @@ def test_parse_command() -> None:
         [
             "[1, 2, 3, 4] | map x: x + 1 | list | print",
             "print(list(map(lambda x: x + 1, [1, 2, 3, 4])))",
-        ],
-        ["map x: x + 1 | list | print", "print(list(map(lambda x: x + 1, stdin)))"],
+        ]
+        # ["map x: x + 1 | list | print", "print(list(map(lambda x: x + 1, stdin)))"],
     ]
     for case in test_cases:
         assert parser.parse_command(*case[:-1]) == case[-1]
@@ -44,4 +44,4 @@ def test_pypthon_cmd_to_python() -> None:
     ]
 
     for case in test_cases:
-        assert parser.pypthon_cmd_to_python(*case[:-1]) == case[-1]
+        assert parser.pypthon_cmd_to_python(*case[:-1], False) == case[-1]
