@@ -37,13 +37,15 @@ def test_get_piped_segments() -> None:
         assert parser.get_piped_segments(*case[:-1]) == case[-1]
 
 
-def test_pypthon_to_python() -> None:
+def test_pypthon_cmd_to_python() -> None:
     test_cases = [
         ["print", "print()"],
         ["print 'hello' 'world'", "print('hello', 'world')"],
+        ["print 1 + 2", "print(1 + 2)"],
         ["map x: x + 1", "map(lambda x: x + 1)"],
-        ["filter x: x[:2] != 'oi'", "filter(lambda x: x[:2] != 'oi')"]
+        ["map x: x[1: 2]", "map(lambda x: x[1: 2])"],
+        ["filter x: x[: 2] != 'oi'", "filter(lambda x: x[: 2] != 'oi')"]
     ]
 
     for case in test_cases:
-        assert parser.get_piped_segments(*case[:-1]) == case[-1]
+        assert parser.pypthon_cmd_to_python(*case[:-1]) == case[-1]
