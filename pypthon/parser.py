@@ -1,8 +1,25 @@
-from typing import *
+from typing import Generator, List, Tuple
 
-literal_chars = {'"': '"', "'": "'", '(': ')', '[': ']', '{': '}'}
-operator_chars = {'*', '**', '^', '&', '*', '<', '<=', '==',
-                  '>', '>=', '!=', '+', '-', '/', '<<', '>>'}
+literal_chars = {'"': '"', "'": "'", "(": ")", "[": "]", "{": "}"}
+operator_chars = {
+    "*",
+    "**",
+    "^",
+    "&",
+    "*",
+    "<",
+    "<=",
+    "==",
+    ">",
+    ">=",
+    "!=",
+    "+",
+    "-",
+    "/",
+    "<<",
+    ">>",
+}
+
 
 def parse_command(command: str) -> str:
     """
@@ -26,8 +43,8 @@ def get_piped_segments(command: str) -> List[str]:
     """
     Gets the python code of each command in between pipes.
     """
-    return [pypthon_cmd_to_python(term) for term in __term_enumerator(command, '|')]
-    
+    return [pypthon_cmd_to_python(term) for term in __term_enumerator(command, "|")]
+
 
 def pypthon_cmd_to_python(command: str) -> str:
     command = command.strip()
@@ -48,16 +65,16 @@ def __is_literal(code: str) -> bool:
 def __get_function_name_and_args(command: str) -> Tuple[str, List[str]]:
     command = command.strip()
     try:
-        sidx = command.index(' ')
+        sidx = command.index(" ")
         return command[:sidx], __spaces_separated_to_args(command[sidx:])
     except ValueError:
         return command, []
 
 
 def __spaces_separated_to_args(space_arg: str) -> List[str]:
-    terms = list(__term_enumerator(space_arg, ' '))
+    terms = list(__term_enumerator(space_arg, " "))
     return __combine_args_with_operators(terms)
-    
+
 
 def __term_enumerator(terms: str, separator: str) -> Generator[str, None, None]:
     last_idx = 0
@@ -81,7 +98,7 @@ def __combine_args_with_operators(args: List[str]) -> List[str]:
 
     while args:
         arg = args.pop()
-        is_colon = arg[-1:] == ':'
+        is_colon = arg[-1:] == ":"
         if arg[-1:] in operator_chars or arg[-2:] in operator_chars or is_colon:
             prev = args_after_operators[-1]
             if is_colon:
@@ -96,6 +113,6 @@ def __combine_args_with_operators(args: List[str]) -> List[str]:
 
 
 def __combine_two_piped(first: str, second: str) -> str:
-    if second[-2:-1] != '(':
+    if second[-2:-1] != "(":
         return f"{second[:-1]}, {first}{second[-1:]}"
     return f"{second[:-1]}{first}{second[-1:]}"
