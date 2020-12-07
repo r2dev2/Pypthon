@@ -10,8 +10,15 @@ def parse_command(command: str) -> str:
     """
     segments = get_piped_segments(command)
     value = segments[0]
-    for segment in segments[1:]:
+
+    if __is_literal(value):
+        segments = segments[1:]
+    else:
+        value = "stdin"
+
+    for segment in segments:
         value = __combine_two_piped(value, segment)
+
     return value
 
 
@@ -19,21 +26,8 @@ def get_piped_segments(command: str) -> List[str]:
     """
     Gets the python code of each command in between pipes.
     """
-    commands = []
-    last_idx = 0
-    is_creating_literal = []
-
-    for i, c in enumerate(command + '|'):
-        if is_creating_literal and c == literal_chars.get(is_creating_literal[-1]):
-            is_creating_literal.pop()
-        elif c in literal_chars:
-            is_creating_literal.append(c)
-        elif c == '|' and not is_creating_literal:
-            commands.append(pypthon_cmd_to_python(command[last_idx:i]))
-            last_idx = i + 1
-
-    return commands
-
+    return [pypthon_cmd_to_python(term) for term in __term_enumerator(command, '|')]
+    
 
 def pypthon_cmd_to_python(command: str) -> str:
     command = command.strip()
@@ -61,21 +55,28 @@ def __get_function_name_and_args(command: str) -> Tuple[str, List[str]]:
 
 
 def __spaces_separated_to_args(space_arg: str) -> List[str]:
-    args = []
+    terms = list(__term_enumerator(space_arg, ' '))
+    return __combine_args_with_operators(terms)
+    
+
+def __term_enumerator(terms: str, separator: str) -> Generator[str, None, None]:
     last_idx = 0
     is_creating_literal = []
 
-    for i, c in enumerate(space_arg + ' '):
+    for i, c in enumerate(terms + separator):
         if is_creating_literal and c == literal_chars.get(is_creating_literal[-1]):
             is_creating_literal.pop()
         elif c in literal_chars:
             is_creating_literal.append(c)
-        elif c == ' ' and not is_creating_literal:
-            arg = space_arg[last_idx:i].strip()
-            if arg:
-                args.append(arg)
+        elif c == separator and not is_creating_literal:
+            term = terms[last_idx:i].strip()
+            if term:
+                yield term
                 last_idx = i + 1
 
+
+def __combine_args_with_operators(args: List[str]) -> List[str]:
+    args = args[:]
     args_after_operators = []
 
     while args:

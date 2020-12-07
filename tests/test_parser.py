@@ -11,6 +11,10 @@ def test_parse_command() -> None:
         [
             '[1, 2, 3, 4] | map x: x + 1 | list | print',
             'print(list(map(lambda x: x + 1, [1, 2, 3, 4])))'
+        ],
+        [
+            'map x: x + 1 | list | print',
+            'print(list(map(lambda x: x + 1, stdin)))'
         ]
     ]
     for case in test_cases:
