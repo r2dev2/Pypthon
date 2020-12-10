@@ -16,8 +16,10 @@ operator_chars = {
     "+",
     "-",
     "/",
+    "//",
     "<<",
     ">>",
+    ",",
 }
 spaced_operator_chars = {
     "and",
@@ -111,10 +113,16 @@ def __combine_args_with_operators(args: List[str]) -> List[str]:
     while args:
         arg = args.pop()
         is_colon = arg[-1:] == ":"
-        if arg in spaced_operator_chars or arg[-1:] in operator_chars or arg[-2:] in operator_chars or is_colon:
+        if (
+            arg in spaced_operator_chars
+            or arg[-1:] in operator_chars
+            or arg[-2:] in operator_chars
+            or is_colon
+        ):
             prev = args_after_operators[-1]
+            prev_args = __get_prev_args(args, arg)
             if is_colon:
-                args_after_operators[-1] = f"lambda {arg} {prev}"
+                args_after_operators[-1] = f"lambda {prev_args}{arg} {prev}"
             else:
                 other_value = args.pop()
                 args_after_operators[-1] = f"{other_value} {arg} {prev}"
@@ -122,6 +130,21 @@ def __combine_args_with_operators(args: List[str]) -> List[str]:
             args_after_operators.append(arg)
 
     return args_after_operators[::-1]
+
+
+def __get_prev_args(args: List[str], initial: str) -> str:
+    prev_args = []
+    repeat = initial.strip().startswith(",")
+    while args:
+        if args[-1].strip().endswith(",") or repeat:
+            arg = args.pop().strip()
+            repeat = arg.startswith(",")
+            prev_args.append(arg)
+        else:
+            break
+    if prev_args:
+        return " ".join(prev_args) + " "
+    return ""
 
 
 def __combine_two_piped(first: str, second: str) -> str:
