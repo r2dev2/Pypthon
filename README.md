@@ -59,3 +59,7 @@ In pypthon, lambda expressions do not need the ``lambda`` keyword before the arg
 ```python
 # TODO documentation, for now just look in pypthon/environment.py
 ```
+
+# Other
+
+This project idea was heavily inspired by the pied piper package which only works with Python 2 and has virtually disappeared.
