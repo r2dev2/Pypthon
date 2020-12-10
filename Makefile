@@ -4,3 +4,6 @@ py = python3
 
 test:
 	$(py) -m pytest tests/
+
+install:
+	$(py) setup.py install --user

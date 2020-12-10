@@ -11,7 +11,7 @@ pip install -U pypthon
 # Usage
 
 ```
-python -m pypthon 'Pypthon command'
+pyp 'Pypthon command'
 ```
 
 A Pypthon command consists of the following
