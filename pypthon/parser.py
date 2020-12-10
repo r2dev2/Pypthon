@@ -26,6 +26,8 @@ spaced_operator_chars = {
     "or",
     "in",
     "not in",
+    "if",
+    "else",
 }
 
 
