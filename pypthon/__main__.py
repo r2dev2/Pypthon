@@ -10,7 +10,7 @@ except ImportError:
     from environment import *
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description="Python with pipes")
     parser.add_argument("command", help="the pypthon command")
     parser.add_argument("-s", "--show-python", help="show python code generated", action="store_true")
@@ -18,7 +18,15 @@ def main():
     python = parse_command(args.command)
     if args.show_python:
         print(python)
+    exec(compile(get_user_custom_setup(), "<string>", "exec"))
     eval(python)
+
+
+def get_user_custom_setup() -> str:
+    pyprc = Path.home() / ".pypthonrc.py"
+    pyprc.touch()
+    with open(pyprc, 'r') as fin:
+        return fin.read()
 
 
 if __name__ == "__main__":
