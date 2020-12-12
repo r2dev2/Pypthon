@@ -1,5 +1,6 @@
 import itertools as it
 import os
+import random
 import re
 import shlex
 import shutil
@@ -42,9 +43,15 @@ def sh(command, iterable):
     This streams input but not the response.
     """
     pipe = subprocess.PIPE
-    process = subprocess.Popen(shlex.split(command), universal_newlines=True, stdin=pipe, stdout=pipe, stderr=pipe)
+    process = subprocess.Popen(
+        shlex.split(command),
+        universal_newlines=True,
+        stdin=pipe,
+        stdout=pipe,
+        stderr=pipe,
+    )
     for line in iterable:
-        process.stdin.write(line + '\n')
+        process.stdin.write(line + "\n")
         process.stdin.flush()
     process.stdin.close()
     return process.stdout

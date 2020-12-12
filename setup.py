@@ -1,19 +1,29 @@
-import setuptools
 import sys
+
+import setuptools
 
 # Thank you @KentoNishi for this setup.py
 
 try:
-    with open("README.md", 'r') as fh:
+    with open("README.md", "r") as fh:
         long_description = fh.read()
 except:
-    long_description = ''
+    long_description = ""
 
 try:
-    with open("requirements.txt", 'r') as reqs:
+    with open("requirements.txt", "r") as reqs:
         requirements = reqs.read().split("\n")
 except:
-    requirements = ''
+    requirements = ""
+
+with open("pypthon/__main__.py", 'r') as fin:
+    main_module = fin.read()
+
+with open("pypthon/__init__.py", 'r') as fin:
+    previous_init = fin.read()
+
+with open("pypthon/__init__.py", 'w+') as fout:
+    fout.write(main_module)
 
 try:
     if "refs/tags/v" in sys.argv[1]:
@@ -39,9 +49,10 @@ setuptools.setup(
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
         "Operating System :: OS Independent",
     ],
-    entry_points={
-        "console_scripts": ["pyp=pypthon:main"]
-    },
+    entry_points={"console_scripts": ["pyp=pypthon:main"]},
     python_requires=">=3.5",
     install_requires=requirements,
 )
+
+with open("pypthon/__init__.py", 'w+') as fout:
+    fout.write(previous_init)

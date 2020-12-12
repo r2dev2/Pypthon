@@ -1,16 +1,23 @@
+import argparse
 import sys
 
 # TODO Figure out why I need different imports for pip and for testing
 try:
+    from .parser import parse_command
     from .environment import *
-    from . import parser
 except ImportError:
+    from parser import parse_command
     from environment import *
-    import parser
 
 
 def main():
-    python = parser.parse_command(" ".join(sys.argv[1:]))
+    parser = argparse.ArgumentParser(description="Python with pipes")
+    parser.add_argument("command", help="the pypthon command")
+    parser.add_argument("-s", "--show-python", help="show python code generated", action="store_true")
+    args = parser.parse_args()
+    python = parse_command(args.command)
+    if args.show_python:
+        print(python)
     eval(python)
 
 
