@@ -14,17 +14,29 @@ pip install -U pypthon
 pyp 'Pypthon command'
 ```
 
+If pypthon is not in your path, you must invoke via
+
+```
+python3 -m pypthon 'Pypthon command
+```
+
+To see the python code being generated, use the ``--show-python`` flag:
+
+```
+pyp --show-python 'Python command'
+```
+
 A Pypthon command consists of the following
 
 ```
 source | piped function | piped function | piped function
 ```
 
-The source must be any python expression. To have the source be another command being piped into Pypthon, use ``stdin``.
+The source must be any python expression. To have the source be an external command being piped into Pypthon, use ``stdin``.
 
 ## Piped functions
 
-Piped functions are any python functions which take the previous value as their last argument. In the example,
+Piped functions are any python functions which take the previous value as their last argument. In the example pypthon code,
 
 ```python
 [2, 1, 3] | sorted | print "Sorted" "list:"
@@ -56,9 +68,22 @@ In pypthon, lambda expressions do not need the ``lambda`` keyword before the arg
 
 ## Environment
 
+The environment is fully customizable with a ``.pypthonrc.py``. On startup, the pypthonrc will be imported, giving the pypthon command access to custom functions. If you feel like you have general functions that can be used by other pypthon users, do not hesitate to send a pull request to add your customizations to the standard environment as it is still growing. It is advisable to not include heavy imports such as ``numpy`` to the pypthonrc as the startup time will be negatively impacted for each invocation of pypthon.
+
+
+### uprint
+
 ```python
-# TODO documentation, for now just look in pypthon/environment.py
+[1, 2, 3] | uprint {"sep": "\n"}
 ```
+will output
+```
+1
+2
+3
+```
+
+``uprint`` unpacks the previous value into the ``print`` function. It takes one parameter which is a dictionary containing the keyword arguments to pass to ``print``.
 
 # Other
 
