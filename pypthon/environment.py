@@ -7,7 +7,6 @@ import shlex
 import shutil
 import subprocess
 import sys
-import typing as tp
 from concurrent.futures import ThreadPoolExecutor
 from functools import reduce
 from pathlib import Path
