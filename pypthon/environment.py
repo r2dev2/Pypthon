@@ -106,3 +106,15 @@ def cfilter(iterable, func, threads=100):
     for is_valid, value in cmap(map_fn, threads, iterable):
         if is_valid:
             yield value
+
+
+def result_fn(func):
+    """
+    Wrapper to return either the function return or the exception raised.
+    """
+    def inner(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception as e:
+            return e
+    return inner

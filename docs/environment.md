@@ -72,7 +72,20 @@ will concurrently send get requests to google using ``cmap``. ``cmap`` (concurre
 The following Pypthon invocation
 
 ```
-pyp -i 'requests' "['https://google.com', 'https://google.com/pypthon'] | cfilter url: requests.get(url).status_code == 200 | uprint"
+pyp -i 'requests' "['https://google.com', 'https://google.com/pypthon'] | cfilter url: requests.get(url).status_code == 200 | list | print"
+```
+This will output
+```
+[<Response [200]>, MissingSchema("Invalid URL 'invalidurl': No schema supplied. Perhaps you meant http://invalidurl?")]
 ```
 
 ``cfilter`` (concurrent filter) is a concurrent implementation of ``filter``. In this example, it is being used to filter a list of urls for successful get requests. It has a second optional parameter which is the amount of threads to limit ``cfilter`` to. This defaults to ``100``.
+
+
+### result_fn
+
+```
+py pypthon -i 'requests' "['https://google.com', 'invalidurl'] | cmap url: result_fn(requests.get)(url) | uprint"
+```
+
+``result_fn`` wraps a function to make it return the function return value or the exception raised by the function. This is used as of now as there is no ``try``/``catch`` syntax in Pypthon yet.
