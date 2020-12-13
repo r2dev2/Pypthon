@@ -1,3 +1,4 @@
+import functools
 import itertools as it
 import os
 import random
@@ -6,13 +7,25 @@ import shlex
 import shutil
 import subprocess
 import sys
+import typing as tp
 from functools import reduce
 from pathlib import Path
 from pprint import pprint
 from sys import stdin
 
 
-def uprint(kwargs, iterable):
+def iterable_first(fn):
+    """
+    Decorator used to make the piped value the first argument.
+    """
+    def inner(*args):
+        *regular_args, piped = args
+        return fn(piped, *regular_args)
+    return inner
+
+
+@iterable_first
+def uprint(iterable, kwargs={}):
     """
     Allows unpacking into print.
 
@@ -20,20 +33,25 @@ def uprint(kwargs, iterable):
 
     >>> ["hello", "world"] | uprint {"sep": ":"}
     hello:world
+    >>> ["hello", "world"] | uprint
+    hello world
     """
     return print(*iterable, **kwargs)
+    
 
-
-def ufunc(func, iterable):
+@iterable_first
+def ufunc(iterable, func, kwargs={}):
     """
     Allows unpacking iterable into functions.
 
     Usage:
 
+    >>> ["hello", "world"] | ufunc print {"sep": ":"}
+    hello:world
     >>> ["hello", "world"] | ufunc print
     hello world
     """
-    return func(*iterable)
+    return func(*iterable, **kwargs)
 
 
 def sh(command, iterable):
