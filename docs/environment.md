@@ -65,4 +65,14 @@ The following Pypthon invocation
 pyp -i 'requests' "range(3) | cmap x: requests.get('https://google.com').status_code | uprint"
 ```
 
-will concurrently send get requests to google using ``cmap``. ``cmap`` (concurrent map) concurrently maps a function to the previous value and can be used most frequently in making network requests. It has a second optional parameter which is the amount of threads to limit ``cmap`` to.
+will concurrently send get requests to google using ``cmap``. ``cmap`` (concurrent map) concurrently maps a function to the previous value and can be used most frequently in making network requests. It has a second optional parameter which is the amount of threads to limit ``cmap`` to. This defaults to ``100``.
+
+### cfilter
+
+The following Pypthon invocation
+
+```
+pyp -i 'requests' "['https://google.com', 'https://google.com/pypthon'] | cfilter url: requests.get(url).status_code == 200 | uprint"
+```
+
+``cfilter`` (concurrent filter) is a concurrent implementation of ``filter``. In this example, it is being used to filter a list of urls for successful get requests. It has a second optional parameter which is the amount of threads to limit ``cfilter`` to. This defaults to ``100``.

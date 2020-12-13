@@ -88,3 +88,21 @@ def cmap(iterable, func, threads=100):
     """
     executor = ThreadPoolExecutor(max_workers=threads)
     return executor.map(func, iterable)
+
+
+@iterable_first
+def cfilter(iterable, func, threads=100):
+    """
+    Concurrent filter.
+
+    Usage:
+
+    >>> ['https://google.com', 'https://google.com/pypthon'] | cfilter url: requests.get(url).status_code == 200 | uprint
+    https://google.com
+    """
+    def map_fn(value):
+        return func(value), value
+
+    for is_valid, value in cmap(map_fn, threads, iterable):
+        if is_valid:
+            yield value

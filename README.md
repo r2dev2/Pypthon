@@ -76,10 +76,12 @@ To import modules specifically for the Pypthon invocation, use the ``-i`` flag.
 pyp -i 'requests' -i 'numpy as np' "[1, 2, 3] | map x: requests.get('https://google.com').status_code | list | np.mean | print"
 ```
 
-In the above example, numpy and requests were imported. The syntax of ``module`` as ``alias`` is valid in Pypthon. The methods in the modules are available for use in Pypthon.
+In the above example, numpy and requests were imported. The syntax of ``module`` ``as`` ``alias`` is valid in Pypthon. The methods in the modules are available for use in Pypthon.
 
 The documentation for the standard environment is at [docs/example.md](https://github.com/r2dev2bb8/Pypthon/blob/master/docs/environment.md).
 
 # Other
+
+There are currently some bugs in parsing the source to the pipe chain. If it incorrectly raises an error in the first pipe segment, surround it with parenthesis and see if it works.
 
 This project idea was heavily inspired by the pied piper package which only works with Python 2 and has virtually disappeared.
