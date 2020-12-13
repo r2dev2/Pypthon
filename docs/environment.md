@@ -35,7 +35,7 @@ will output
 3
 ```
 
-``uprint`` unpacks the previous value into the ``print`` function. It takes one parameter which is a dictionary containing the keyword arguments to pass to ``print``.
+``uprint`` unpacks the previous value into the ``print`` function. It takes one optional parameter which is a dictionary containing the keyword arguments to pass to ``print``.
 
 ### ufunc
 
@@ -47,7 +47,7 @@ will output
 1 2 3 4 5 6
 ```
 
-``ufunc`` unpacks the previous value into the function provided as the first argument.
+``ufunc`` unpacks the previous value into the function provided as the first argument. It takes a second optional argument specifying keyword arguments.
 
 
 ### sh
