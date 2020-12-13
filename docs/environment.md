@@ -49,7 +49,6 @@ will output
 
 ``ufunc`` unpacks the previous value into the function provided as the first argument. It takes a second optional argument specifying keyword arguments.
 
-
 ### sh
 
 ```python
@@ -57,3 +56,13 @@ will output
 ```
 
 ``sh`` inputs the previous values into a shell function. It takes one argument which is the shell command.
+
+### cmap
+
+The following Pypthon invocation
+
+```
+pyp -i 'requests' "range(3) | cmap x: requests.get('https://google.com').status_code | uprint"
+```
+
+will concurrently send get requests to google using ``cmap``. ``cmap`` (concurrent map) concurrently maps a function to the previous value and can be used most frequently in making network requests. It has a second optional parameter which is the amount of threads to limit ``cmap`` to.

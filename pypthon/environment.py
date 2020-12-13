@@ -8,6 +8,7 @@ import shutil
 import subprocess
 import sys
 import typing as tp
+from concurrent.futures import ThreadPoolExecutor
 from functools import reduce
 from pathlib import Path
 from pprint import pprint
@@ -73,3 +74,17 @@ def sh(command, iterable):
         process.stdin.flush()
     process.stdin.close()
     return process.stdout
+
+
+@iterable_first
+def cmap(iterable, func, threads=100):
+    """
+    Concurrent map.
+
+    Usage:
+
+    >>>  range(3) | cmap requests.get("https://google.com") | uprint
+    <Response [200]> <Response [200]> <Response [200]>
+    """
+    executor = ThreadPoolExecutor(max_workers=threads)
+    return executor.map(func, iterable)
