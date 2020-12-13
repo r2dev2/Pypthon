@@ -20,17 +20,13 @@ def main() -> None:
     if args.show_python:
         print(python)
     code = '\n'.join([
-        '\n'.join("import %s" % mod for mod in getattr(args, "import")),
         get_user_custom_setup(),
         python
     ])
-    print(code)
-    exec(compile(code, "<string>", "exec"))
-    # for module in getattr(args, "import"):
-    #     import_string = f"import {module}"
-    #     exec(compile(import_string, "<string", "exec"))
-    # exec(compile(get_user_custom_setup(), "<string>", "exec"))
-    # eval(python)
+    for module in getattr(args, "import"):
+        import_string = f"import {module}"
+        exec(import_string, globals())
+    exec(code)
 
 
 def get_user_custom_setup() -> str:
