@@ -5,7 +5,7 @@ Pipes for python3 to be used in shell
 # Setup
 
 ```
-pip install -U pypthon
+pip install pypthon -U 
 ```
 
 # Usage
