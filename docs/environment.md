@@ -7,6 +7,7 @@ To run the pypthon code in the following documentation, run ``pyp 'Pypthon comma
 The default imports are
 
 ```python
+import functools
 import itertools as it
 import os
 import random
@@ -15,6 +16,7 @@ import shlex
 import shutil
 import subprocess
 import sys
+from concurrent.futures import ThreadPoolExecutor
 from functools import reduce
 from pathlib import Path
 from pprint import pprint
@@ -40,7 +42,7 @@ will output
 ### ufunc
 
 ```python
-[[1, 2, 3], [4, 5, 6]] | ufunc it.chain | uprint {}
+[[1, 2, 3], [4, 5, 6]] | ufunc it.chain | uprint
 ```
 will output
 ```
@@ -52,7 +54,7 @@ will output
 ### sh
 
 ```python
-[1, 2, 3, 4, 5, 6] | map str | sh "shuf" | map s: s.strip() | uprint {}
+[1, 2, 3, 4, 5, 6] | map str | sh "shuf" | map s: s.strip() | uprint
 ```
 
 ``sh`` inputs the previous values into a shell function. It takes one argument which is the shell command.
@@ -65,7 +67,7 @@ The following Pypthon invocation
 pyp -i 'requests' "range(3) | cmap x: requests.get('https://google.com').status_code | uprint"
 ```
 
-will concurrently send get requests to google using ``cmap``. ``cmap`` (concurrent map) concurrently maps a function to the previous value and can be used most frequently in making network requests. It has a second optional parameter which is the amount of threads to limit ``cmap`` to. This defaults to ``100``.
+will concurrently send get requests to google using ``cmap``. ``cmap`` (concurrent map) concurrently maps a function to the previous value. It has a second optional parameter which is the amount of threads to limit ``cmap`` to. This defaults to ``100``.
 
 ### cfilter
 
@@ -74,18 +76,20 @@ The following Pypthon invocation
 ```
 pyp -i 'requests' "['https://google.com', 'https://google.com/pypthon'] | cfilter url: requests.get(url).status_code == 200 | list | print"
 ```
-This will output
-```
-[<Response [200]>, MissingSchema("Invalid URL 'invalidurl': No schema supplied. Perhaps you meant http://invalidurl?")]
-```
 
-``cfilter`` (concurrent filter) is a concurrent implementation of ``filter``. In this example, it is being used to filter a list of urls for successful get requests. It has a second optional parameter which is the amount of threads to limit ``cfilter`` to. This defaults to ``100``.
+will concurrently filter urls for successful get requests using ``cfilter``. ``cfilter`` (concurrent filter) concurrently filters a function to the previous value. It has a second optional parameter which is the amount of threads to limit ``cfilter`` to. This defaults to ``100``.
 
 
 ### result_fn
 
+The following pypthon invocation
+
 ```
-py pypthon -i 'requests' "['https://google.com', 'invalidurl'] | cmap url: result_fn(requests.get)(url) | uprint"
+pyp -i 'requests' "['https://google.com', 'invalidurl'] | cmap url: result_fn(requests.get)(url) | uprint"
+```
+will output
+```
+[<Response [200]>, MissingSchema("Invalid URL 'invalidurl': No schema supplied. Perhaps you meant http://invalidurl?")]
 ```
 
 ``result_fn`` wraps a function to make it return the function return value or the exception raised by the function. This is used as of now as there is no ``try``/``catch`` syntax in Pypthon yet.
