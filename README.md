@@ -70,6 +70,14 @@ In pypthon, lambda expressions do not need the ``lambda`` keyword before the arg
 
 The environment is fully customizable with a ``.pypthonrc.py``. On startup, the pypthonrc will be imported, giving the pypthon command access to custom functions. If you feel like you have general functions that can be used by other pypthon users, do not hesitate to send a pull request to add your customizations to the standard environment as it is still growing. It is advisable to not include heavy imports such as ``numpy`` to the pypthonrc as the startup time will be negatively impacted for each invocation of pypthon.
 
+To import modules specifically for the Pypthon invocation, use the ``-i`` flag.
+
+```
+pyp -i 'requests' -i 'numpy as np' "[1, 2, 3] | map x: requests.get('https://google.com').status_code | list | np.mean | print"
+```
+
+In the above example, numpy and requests were imported. The syntax of ``module`` as ``alias`` is valid in Pypthon. The methods in the modules are available for use in Pypthon.
+
 The documentation for the standard environment is at [docs/example.md](https://github.com/r2dev2bb8/Pypthon/blob/master/docs/environment.md).
 
 # Other
