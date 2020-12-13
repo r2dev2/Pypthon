@@ -2,7 +2,7 @@
 
 Pipes for python3 to be used in shell
 
-![cfilter demo](https://raw.githubusercontent.com/r2dev2bb8/Pypthon/master/img/cfilterdemo.png)
+![cfilter demo](https://raw.githubusercontent.com/r2dev2bb8/Pypthon/master/img/maindemo.png)
 
 # Setup
 
