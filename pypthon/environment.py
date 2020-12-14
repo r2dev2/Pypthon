@@ -18,6 +18,7 @@ def iterable_first(fn):
     """
     Decorator used to make the piped value the first argument.
     """
+    @functools.wraps(fn)
     def inner(*args):
         *regular_args, piped = args
         return fn(piped, *regular_args)
