@@ -1,6 +1,7 @@
 from typing import Generator, List, Tuple
 
 literal_chars = {'"': '"', "'": "'", "(": ")", "[": "]", "{": "}"}
+quotes = {'"', "'"}
 operator_chars = {
     "*",
     "**",
@@ -97,9 +98,10 @@ def __term_enumerator(terms: str, separator: str) -> Generator[str, None, None]:
     ignore = {"not"}
 
     for i, c in enumerate(terms + separator):
+        last_literal = ''.join(is_creating_literal)[-1:]
         if is_creating_literal and c == literal_chars.get(is_creating_literal[-1]):
             is_creating_literal.pop()
-        elif c in literal_chars:
+        elif c in literal_chars and last_literal not in quotes:
             is_creating_literal.append(c)
         elif c == separator and not is_creating_literal:
             term = terms[last_idx:i].strip()

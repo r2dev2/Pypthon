@@ -29,7 +29,7 @@ def main() -> None:
         import_string = f"import {module}"
         if not args.dry_run:
             exec(import_string, globals())
-    if args.dry_run or args.environment:
+    if args.environment:
         pprint(sorted(v for v in globals() if v[:1] != "_"))
     if not args.dry_run:
         exec(code)
