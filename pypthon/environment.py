@@ -14,6 +14,9 @@ from pprint import pprint
 from sys import stdin
 
 
+__executor = ThreadPoolExecutor()
+
+
 def iterable_first(fn):
     """
     Decorator used to make the piped value the first argument.
@@ -59,20 +62,10 @@ def sh(command, iterable):
     """
     Opens a shell function.
 
-    This streams input but not the response.
+    This streams both input and the response.
     """
-    pipe = subprocess.PIPE
-    process = subprocess.Popen(
-        shlex.split(command),
-        universal_newlines=True,
-        stdin=pipe,
-        stdout=pipe,
-        stderr=pipe,
-    )
-    for line in iterable:
-        process.stdin.write(line + "\n")
-        process.stdin.flush()
-    process.stdin.close()
+    process = __open_process(command)
+    __executor.submit(__write_to_process, process, iterable)
     return process.stdout
 
 
@@ -118,3 +111,21 @@ def result_fn(func):
         except Exception as e:
             return e
     return inner
+
+
+def __open_process(command):
+    pipe = subprocess.PIPE
+    return subprocess.Popen(
+        shlex.split(command),
+        universal_newlines=True,
+        stdin=pipe,
+        stdout=pipe,
+        stderr=pipe,
+    )
+
+
+def __write_to_process(process, iterable):
+    for line in iterable:
+        process.stdin.write(line + "\n")
+        process.stdin.flush()
+    process.stdin.close()
