@@ -63,13 +63,11 @@ def get_piped_segments(command: str) -> List[str]:
 def pypthon_cmd_to_python(command: str, is_first: bool) -> str:
     command = command.strip()
 
-    if __is_literal(command):
+    if is_first or __is_literal(command):
         return command
 
     name, args = __get_function_name_and_args(command)
 
-    if is_first:
-        return name
     return f"{name}({', '.join(args)})"
 
 
