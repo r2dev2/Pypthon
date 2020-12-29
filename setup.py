@@ -16,13 +16,13 @@ try:
 except:
     requirements = ""
 
-with open("pypthon/__main__.py", 'r') as fin:
+with open("pypthon/__main__.py", "r") as fin:
     main_module = fin.read()
 
-with open("pypthon/__init__.py", 'r') as fin:
+with open("pypthon/__init__.py", "r") as fin:
     previous_init = fin.read()
 
-with open("pypthon/__init__.py", 'w+') as fout:
+with open("pypthon/__init__.py", "w+") as fout:
     fout.write(main_module)
 
 try:
@@ -54,5 +54,5 @@ setuptools.setup(
     install_requires=requirements,
 )
 
-with open("pypthon/__init__.py", 'w+') as fout:
+with open("pypthon/__init__.py", "w+") as fout:
     fout.write(previous_init)
