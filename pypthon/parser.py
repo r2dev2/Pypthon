@@ -96,7 +96,7 @@ def __term_enumerator(terms: str, separator: str) -> Generator[str, None, None]:
     ignore = {"not"}
 
     for i, c in enumerate(terms + separator):
-        last_literal = ''.join(is_creating_literal)[-1:]
+        last_literal = "".join(is_creating_literal)[-1:]
         if is_creating_literal and c == literal_chars.get(is_creating_literal[-1]):
             is_creating_literal.pop()
         elif c in literal_chars and last_literal not in quotes:

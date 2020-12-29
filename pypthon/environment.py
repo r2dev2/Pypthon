@@ -21,10 +21,12 @@ def iterable_first(fn):
     """
     Decorator used to make the piped value the first argument.
     """
+
     @functools.wraps(fn)
     def inner(*args):
         *regular_args, piped = args
         return fn(piped, *regular_args)
+
     return inner
 
 
@@ -41,7 +43,7 @@ def uprint(iterable, kwargs={}):
     hello world
     """
     return print(*iterable, **kwargs)
-    
+
 
 @iterable_first
 def ufunc(iterable, func, kwargs={}):
@@ -93,6 +95,7 @@ def cfilter(iterable, func, threads=100):
     >>> ['https://google.com', 'https://google.com/pypthon'] | cfilter url: requests.get(url).status_code == 200 | uprint
     https://google.com
     """
+
     def map_fn(value):
         return func(value), value
 
@@ -105,11 +108,13 @@ def result_fn(func):
     """
     Wrapper to return either the function return or the exception raised.
     """
+
     def inner(*args, **kwargs):
         try:
             return func(*args, **kwargs)
         except Exception as e:
             return e
+
     return inner
 
 
