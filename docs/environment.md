@@ -54,7 +54,7 @@ will output
 ### sh
 
 ```python
-[1, 2, 3, 4, 5, 6] | map str | sh "shuf" | map s: s.strip() | uprint
+[1, 2, 3, 4, 5, 6] | map str | sh "shuf" | map str.strip | uprint
 ```
 
 ``sh`` inputs the previous values into a shell function. It takes one argument which is the shell command.
